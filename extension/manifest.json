@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Reddit Mobile Unblocker",
+  "version": "1.1.0",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
+  "permissions": ["storage"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_title": "Reddit Mobile Unblocker",
+    "default_popup": "popup/index.html"
+  },
+  "icons": {
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "64": "icons/icon-64.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "reddit-mobile-unblock@extensions.local",
+      "strict_min_version": "144.0",
+      "data_collection_permissions": { "required": ["none"] }
+    },
+    "gecko_android": { "strict_min_version": "144.0" }
+  },
+  "content_scripts": [{
+    "matches": [
+      "https://reddit.com/*",
+      "https://www.reddit.com/*",
+      "https://m.reddit.com/*",
+      "https://sh.reddit.com/*"
+    ],
+    "css": ["content/unblock.css"],
+    "css_origin": "user",
+    "js": ["content/unblock.js"],
+    "world": "MAIN",
+    "run_at": "document_start",
+    "all_frames": false
+  }, {
+    "matches": [
+      "https://reddit.com/*",
+      "https://www.reddit.com/*",
+      "https://m.reddit.com/*",
+      "https://sh.reddit.com/*"
+    ],
+    "js": ["content/status.js"],
+    "world": "ISOLATED",
+    "run_at": "document_start",
+    "all_frames": false
+  }]
+}

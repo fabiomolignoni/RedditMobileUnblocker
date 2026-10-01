@@ -1,0 +1,33 @@
+:root {
+  color-scheme: dark;
+  font: 14px/1.4 system-ui, sans-serif;
+  background: #000;
+  color: #f1f7f4;
+}
+
+* { box-sizing: border-box; }
+
+body { width: 320px; margin: 0; padding: 20px; }
+
+.header { display: flex; align-items: center; gap: 12px; }
+.logo { flex: none; border-radius: 12px; }
+.eyebrow { margin: 0 0 2px; color: #a9c2b7; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+h1 { margin: 0; font-size: 17px; line-height: 1.2; }
+
+.status-card, .counter-card { padding: 16px; border: 1px solid #3d554a; border-radius: 14px; background: #141a17; }
+.status-card { margin: 20px 0 12px; }
+.status-heading { display: flex; align-items: center; gap: 9px; }
+.status-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #8a9e94; }
+.status-dot.active { background: #63d6a3; box-shadow: 0 0 0 3px #275340; }
+.status-card p { margin: 8px 0 0 18px; color: #a9c2b7; }
+.counter-card { display: grid; gap: 2px; margin-bottom: 16px; }
+.counter-card strong { color: #63d6a3; font-size: 30px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.counter-card span { color: #a9c2b7; }
+
+nav { display: grid; gap: 4px; }
+nav a { display: flex; justify-content: space-between; align-items: center; min-height: 38px; padding: 6px 10px; border-radius: 8px; color: #a5edc9; font-weight: 600; text-decoration: none; }
+nav a:hover, nav a:focus-visible { background: #294a3b; outline: none; }
+nav a:focus-visible { box-shadow: 0 0 0 2px #63d6a3; }
+nav a span:last-child { color: #a9c2b7; }
+
+footer { margin-top: 14px; border-top: 1px solid #3d554a; padding-top: 12px; color: #a9c2b7; font-size: 12px; }

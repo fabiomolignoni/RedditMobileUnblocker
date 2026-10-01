@@ -1,0 +1,23 @@
+{
+  "name": "reddit-mobile-unblocker",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Firefox extension that dismisses Reddit app prompts and restores mobile browsing",
+  "license": "MPL-2.0",
+  "scripts": {
+    "lint": "web-ext lint --source-dir extension --warnings-as-errors",
+    "build": "python3 scripts/build.py",
+    "check": "npm run lint && npm test",
+    "release": "npm run check && python3 scripts/release.py",
+    "icons": "python3 scripts/render_icons.py",
+    "test": "node tests/test_popup.mjs && python3 -m unittest discover -s tests -v",
+    "start": "web-ext run --source-dir extension",
+    "start:android": "web-ext run --source-dir extension --target firefox-android"
+  },
+  "devDependencies": {
+    "web-ext": "10.6.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

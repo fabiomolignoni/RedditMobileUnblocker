@@ -1,0 +1,12 @@
+/* Exact app-promotion components only; never hide generic Reddit sheets. */
+#app-upsell-blocking-bottom-sheet-direct,
+#app-upsell-blocking-bottom-sheet-seo,
+#desktop-dynamic-upsell-dialog,
+#xpromo-bottom-sheet,
+app-upsell-blocking-bottom-sheet-direct,
+app-upsell-blocking-bottom-sheet-seo,
+.configured-xpromo-bottom-sheet,
+.configured-xpromo-full-screen,
+[data-rmu-suppressed] {
+  display: none !important;
+}

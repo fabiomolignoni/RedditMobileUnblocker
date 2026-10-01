@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reddit Mobile Unblocker</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <img class="logo" src="../icons/icon-48.png" alt="" width="48" height="48">
+    <div>
+      <p class="eyebrow">Browser extension</p>
+      <h1>Reddit Mobile Unblocker</h1>
+    </div>
+  </header>
+
+  <main>
+    <section class="status-card" role="status" aria-live="polite">
+      <div class="status-heading">
+        <span id="status-dot" class="status-dot" aria-hidden="true"></span>
+        <strong id="status-title">Checking this page…</strong>
+      </div>
+      <p id="status-detail">Reading the current tab.</p>
+    </section>
+    <section class="counter-card" aria-label="Blocked app prompts" aria-live="polite">
+      <strong id="total-count">…</strong>
+      <span>Recognized app prompts blocked since installation</span>
+    </section>
+  </main>
+
+  <nav aria-label="Project links">
+    <a href="https://github.com/silentfoxdev/RedditMobileUnblocker" target="_blank" rel="noopener noreferrer">
+      <span>GitHub</span><span aria-hidden="true">↗</span>
+    </a>
+    <a href="https://github.com/silentfoxdev/RedditMobileUnblocker/issues" target="_blank" rel="noopener noreferrer">
+      <span>Issues</span><span aria-hidden="true">↗</span>
+    </a>
+    <a href="https://ko-fi.com/silentfoxdev/donate" target="_blank" rel="noopener noreferrer">
+      <span>Support ☕</span><span aria-hidden="true">↗</span>
+    </a>
+  </nav>
+
+  <footer>Version <span id="version"></span></footer>
+</body>
+</html>
