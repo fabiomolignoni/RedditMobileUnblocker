@@ -1,12 +1,16 @@
-/* Exact app-promotion components only; never hide generic Reddit sheets. */
+/* App-promotion components only; keep in sync with PROMO and OWNER in unblock.js.
+   User-origin rules reach open and closed shadow trees and override the site's
+   inline !important styles. Generic Reddit sheets and dialogs are never hidden. */
 #app-upsell-blocking-bottom-sheet-direct,
 #app-upsell-blocking-bottom-sheet-seo,
 #desktop-dynamic-upsell-dialog,
 #xpromo-bottom-sheet,
 app-upsell-blocking-bottom-sheet-direct,
 app-upsell-blocking-bottom-sheet-seo,
+.configured-xpromo,
 .configured-xpromo-bottom-sheet,
 .configured-xpromo-full-screen,
+configured-xpromo-modal,
 [data-rmu-suppressed] {
   display: none !important;
 }

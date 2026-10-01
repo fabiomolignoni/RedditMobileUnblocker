@@ -1,0 +1,44 @@
+{
+  "extensionDescription": {
+    "message": "Chiude i prompt dell’app di Reddit e ripristina la navigazione mobile senza cancellare i cookie."
+  },
+  "versionLabel": {
+    "message": "Versione"
+  },
+  "statusChecking": {
+    "message": "Controllo della scheda…"
+  },
+  "statusCheckingDetail": {
+    "message": "Ricerca di Reddit nella pagina corrente."
+  },
+  "statusActive": {
+    "message": "Protezione attiva"
+  },
+  "statusActiveDetail": {
+    "message": "I prompt dell’app di Reddit sono bloccati in questa pagina."
+  },
+  "statusInactive": {
+    "message": "Non attiva in questa scheda"
+  },
+  "statusInactiveDetail": {
+    "message": "Apri Reddit qui, oppure ricarica una scheda di Reddit già aperta."
+  },
+  "totalOne": {
+    "message": "prompt dell’app bloccato dall’installazione"
+  },
+  "totalOther": {
+    "message": "prompt dell’app bloccati dall’installazione"
+  },
+  "projectLinks": {
+    "message": "Link del progetto"
+  },
+  "sourceCode": {
+    "message": "Codice sorgente"
+  },
+  "reportIssue": {
+    "message": "Segnala problema"
+  },
+  "opensInNewTab": {
+    "message": "(si apre in una nuova scheda)"
+  }
+}

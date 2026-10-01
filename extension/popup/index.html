@@ -12,7 +12,7 @@
     <img src="../icons/icon.svg" alt="" width="40" height="40">
     <div>
       <h1>Reddit Mobile Unblocker</h1>
-      <p class="version">Version <span id="version"></span></p>
+      <p class="version"><span data-i18n="versionLabel">Version</span> <span id="version"></span></p>
     </div>
   </header>
 
@@ -24,29 +24,29 @@
         <svg class="icon icon-inactive" viewBox="0 0 24 24"><path d="M7 12h10"/></svg>
       </span>
       <div>
-        <h2 id="status-title">Checking this tab…</h2>
-        <p id="status-detail">Looking for Reddit on the current page.</p>
+        <h2 id="status-title" data-i18n="statusChecking">Checking this tab…</h2>
+        <p id="status-detail" data-i18n="statusCheckingDetail">Looking for Reddit on the current page.</p>
       </div>
     </section>
 
     <section class="stat" aria-live="polite" aria-atomic="true">
       <strong id="total" class="stat-value">…</strong>
-      <span id="total-label" class="stat-label">app prompts blocked since installation</span>
+      <span id="total-label" class="stat-label" data-i18n="totalOther">app prompts blocked since installation</span>
     </section>
   </main>
 
-  <nav class="links" aria-label="Project links">
+  <nav class="links" aria-label="Project links" data-i18n-label="projectLinks">
     <a href="https://github.com/fabiomolignoni/RedditMobileUnblocker" target="_blank" rel="noopener noreferrer">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5"/></svg>
-      <span>Source code</span>
+      <span data-i18n="sourceCode">Source code</span>
       <svg class="icon external" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8m-6.5 0H16v6.5"/></svg>
-      <span class="visually-hidden">(opens in a new tab)</span>
+      <span class="visually-hidden" data-i18n="opensInNewTab">(opens in a new tab)</span>
     </a>
     <a href="https://github.com/fabiomolignoni/RedditMobileUnblocker/issues" target="_blank" rel="noopener noreferrer">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 5v5m0 3.5v.01"/></svg>
-      <span>Report issue</span>
+      <span data-i18n="reportIssue">Report issue</span>
       <svg class="icon external" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8m-6.5 0H16v6.5"/></svg>
-      <span class="visually-hidden">(opens in a new tab)</span>
+      <span class="visually-hidden" data-i18n="opensInNewTab">(opens in a new tab)</span>
     </a>
   </nav>
 </body>

@@ -104,7 +104,8 @@ h1 { font-size: 15px; font-weight: 650; line-height: 1.25; }
 
 /* Project links */
 
-.links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+/* One full-width row per link fits labels of any length in any language. */
+.links { display: grid; gap: 8px; }
 
 .links a {
   display: flex;

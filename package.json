@@ -3,6 +3,14 @@
   "version": "1.2.0",
   "private": true,
   "description": "Firefox extension that dismisses Reddit app prompts and restores mobile browsing",
+  "homepage": "https://github.com/fabiomolignoni/RedditMobileUnblocker#readme",
+  "bugs": {
+    "url": "https://github.com/fabiomolignoni/RedditMobileUnblocker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiomolignoni/RedditMobileUnblocker.git"
+  },
   "license": "MPL-2.0",
   "scripts": {
     "lint": "web-ext lint --source-dir extension --warnings-as-errors",
@@ -10,7 +18,8 @@
     "check": "npm run lint && npm test",
     "release": "npm run check && python3 scripts/release.py",
     "icons": "python3 scripts/render_icons.py",
-    "test": "node tests/test_popup.mjs && python3 -m unittest discover -s tests -v",
+    "test": "node --test tests/unit.test.mjs && python3 -m unittest discover -s tests -v",
+    "test:live": "python3 tests/live.py",
     "start": "web-ext run --source-dir extension",
     "start:android": "web-ext run --source-dir extension --target firefox-android"
   },

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- Rewrite the page script to inspect only inserted or changed elements and to
+  unlock at most once per animation frame. On live Reddit this removes up to 2 s
+  of main-thread work per 20 s of scrolling and long tasks of up to 80 ms.
+- Recognize Reddit's configured promotion portals and close prompts through
+  Reddit's own dismissal event, so prompts with a new identity are removed too.
+- Keep scrolling when a gesture starts on an image, video or button after a prompt.
+- Hide recognized promotions in closed shadow roots; stop writing inline styles.
+- Count a prompt once even when Reddit removes it within the same DOM update.
+- Localize the popup (English, Italian) and stack its links for long labels.
+- Add `npm run test:live` for live Reddit checks, fixtures modeled on Reddit's
+  components, GitHub Actions CI, and homepage and repository metadata.
+
 ## 1.2.0 — redesigned popup
 
 - Rewrite the toolbar popup from scratch: a single panel with the current-tab

@@ -2,5 +2,57 @@
   "extensionDescription": {
     "message": "Dismiss Reddit’s app prompts and restore mobile browsing without clearing cookies.",
     "description": "Short description shown in Firefox's extension manager."
+  },
+  "versionLabel": {
+    "message": "Version",
+    "description": "Popup: label before the version number."
+  },
+  "statusChecking": {
+    "message": "Checking this tab…",
+    "description": "Popup: status title while the current tab is queried."
+  },
+  "statusCheckingDetail": {
+    "message": "Looking for Reddit on the current page.",
+    "description": "Popup: status detail while the current tab is queried."
+  },
+  "statusActive": {
+    "message": "Protecting this tab",
+    "description": "Popup: status title when protection runs in the current tab."
+  },
+  "statusActiveDetail": {
+    "message": "Reddit app prompts are blocked on this page.",
+    "description": "Popup: status detail when protection runs in the current tab."
+  },
+  "statusInactive": {
+    "message": "Not active on this tab",
+    "description": "Popup: status title when protection does not run in the current tab."
+  },
+  "statusInactiveDetail": {
+    "message": "Open Reddit here, or reload a Reddit tab that was already open.",
+    "description": "Popup: status detail when protection does not run in the current tab."
+  },
+  "totalOne": {
+    "message": "app prompt blocked since installation",
+    "description": "Popup: label after a total whose plural category is “one”."
+  },
+  "totalOther": {
+    "message": "app prompts blocked since installation",
+    "description": "Popup: label after a total in any other plural category."
+  },
+  "projectLinks": {
+    "message": "Project links",
+    "description": "Popup: accessible name of the link list."
+  },
+  "sourceCode": {
+    "message": "Source code",
+    "description": "Popup: link to the GitHub repository."
+  },
+  "reportIssue": {
+    "message": "Report issue",
+    "description": "Popup: link to GitHub Issues."
+  },
+  "opensInNewTab": {
+    "message": "(opens in a new tab)",
+    "description": "Popup: screen reader hint after each link."
   }
 }

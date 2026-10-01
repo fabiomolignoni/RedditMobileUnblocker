@@ -12,7 +12,7 @@ def release():
              "package.json", "package-lock.json", ".gitignore", ".nvmrc"]
     names.extend("extension/" + name for name in EXTENSION_FILES)
     for folder, suffixes in (("scripts", {".py"}), ("tests", {".py", ".html", ".js", ".mjs"}),
-                             ("docs", {".md"}), (".github", {".yml"})):
+                             (".github", {".yml"})):
         names.extend(path.relative_to(ROOT).as_posix() for path in (ROOT / folder).rglob("*")
                      if path.is_file() and path.suffix in suffixes)
     source = write_archive(ROOT / "dist" / f"reddit-mobile-unblocker-{version}-source.zip",

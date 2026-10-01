@@ -67,6 +67,7 @@ class PackagingTests(unittest.TestCase):
             self.assertEqual(manifest["name"], "Reddit Mobile Unblocker")
             self.assertEqual(manifest["version"], "1.2.0")
             self.assertEqual(manifest["action"]["default_popup"], "popup/index.html")
+            self.assertEqual(manifest["homepage_url"], "https://github.com/fabiomolignoni/RedditMobileUnblocker")
             self.assertIn("https://github.com/fabiomolignoni/RedditMobileUnblocker\"", popup)
             self.assertIn("https://github.com/fabiomolignoni/RedditMobileUnblocker/issues\"", popup)
             self.assertNotIn("ko-fi", popup.lower())
@@ -140,6 +141,63 @@ class ExtensionTests(unittest.TestCase):
         self.browser.js("showPromo('xpromo-bottom-sheet')")
         self.browser.wait("document.documentElement.getAttribute('data-rmu-prompts-blocked') === '2'")
 
+    def blocked_count(self):
+        return self.browser.js("return document.documentElement.getAttribute('data-rmu-prompts-blocked')")
+
+    def next_frames(self):
+        self.browser.js_async("requestAnimationFrame(() => requestAnimationFrame(arguments[0]))")
+
+    def test_reddit_portal_prompt_hidden_before_frame_and_counted_once(self):
+        self.browser.js("showRedditPrompt('app-upsell-blocking-bottom-sheet-direct', "
+                        "'configured-xpromo configured-xpromo-bottom-sheet')")
+        self.browser.wait("frameSawPromo !== null")
+        self.assertFalse(self.browser.js("return frameSawPromo"))
+        self.browser.wait("!document.body.classList.contains('rpl-scroll-lock') && "
+                          "!document.body.classList.contains('scroll-is-blocked')")
+        self.assertFalse(self.canceled())
+        self.assertFalse(self.canceled(kind="wheel"))
+        # The owner and its portal are one prompt.
+        self.assertEqual(self.blocked_count(), "1")
+
+    def test_unrecognized_portal_is_dismissed_through_reddits_own_event(self):
+        self.browser.js("showRedditPrompt('xpromo-unrecognized-variant', '')")
+        self.browser.wait("!document.querySelector('configured-xpromo-modal') && "
+                          "!document.getElementById('xpromo-unrecognized-variant')")
+        self.browser.wait("!document.body.classList.contains('rpl-scroll-lock') && "
+                          "!document.body.classList.contains('scroll-is-blocked')")
+        self.assertFalse(self.canceled())
+        self.assertEqual(self.blocked_count(), "1")
+
+    def test_reddit_style_normal_dialog_keeps_its_lock(self):
+        self.show_promo()
+        self.browser.js("window.consentSheet = showRedditDialog('data-protection-consent-dialog')")
+        self.next_frames()
+        self.assertTrue(self.browser.js("return document.body.classList.contains('rpl-scroll-lock')"))
+        self.assertTrue(self.canceled())
+        self.browser.js("consentSheet.hide(); document.body.classList.add('rpl-scroll-lock')")
+        self.browser.wait("!document.body.classList.contains('rpl-scroll-lock')")
+        self.assertFalse(self.canceled())
+
+    def test_promotion_in_closed_shadow_root_is_hidden_and_unlocks(self):
+        self.browser.js("""
+            const host = document.createElement('div'); document.body.append(host);
+            const root = host.attachShadow({mode: 'closed'});
+            root.innerHTML = '<div class="configured-xpromo-full-screen">Get the app</div>';
+            window.closedPromo = root.firstElementChild;
+            document.body.classList.add('rpl-scroll-lock');
+        """)
+        # User-origin CSS applies inside closed trees before any script runs.
+        self.assertEqual(self.browser.js("return getComputedStyle(closedPromo).display"), "none")
+        self.browser.wait("!document.body.classList.contains('rpl-scroll-lock')")
+        self.assertEqual(self.blocked_count(), "1")
+
+    def test_scroll_starting_on_media_or_buttons_is_not_frozen(self):
+        self.show_promo()
+        for target in ("#photo", "#clip", "#vote"):
+            with self.subTest(target=target):
+                self.assertFalse(self.canceled(target))
+                self.assertFalse(self.canceled(target, "wheel"))
+
     def test_native_promotion_releases_top_layer(self):
         self.show_promo(native=True)
         self.assertFalse(self.browser.js("return document.querySelector('dialog').open"))
@@ -208,6 +266,7 @@ class ExtensionTests(unittest.TestCase):
         self.browser.js("showNormalDialog(); showPromo();")
         self.assertEqual(self.browser.js("return document.body.style.overflow"), "hidden")
         self.assertTrue(self.browser.js("return document.querySelector('#login-dialog').open"))
+        self.browser.wait("getComputedStyle(document.querySelector('#login-dialog')).pointerEvents === 'auto'")
         self.browser.click("#close")
         self.browser.wait("!document.querySelector('#login-dialog').open")
 
@@ -289,7 +348,7 @@ class ExtensionTests(unittest.TestCase):
             document.body.classList.add('scroll-is-blocked');
         """)
         self.browser.wait("getComputedStyle(document.querySelector('#shadow-host').shadowRoot.firstElementChild).display === 'none'")
-        self.assertFalse(self.browser.js("return document.body.classList.contains('scroll-is-blocked')"))
+        self.browser.wait("!document.body.classList.contains('scroll-is-blocked')")
 
     def test_known_variants_and_localized_text(self):
         for selector in ["#app-upsell-blocking-bottom-sheet-seo", "#desktop-dynamic-upsell-dialog",

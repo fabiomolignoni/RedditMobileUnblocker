@@ -1,26 +1,37 @@
 "use strict";
 
 const TOTAL_KEY = "blockedTotal";
+const LANGUAGE = browser.i18n.getUILanguage();
+const numbers = new Intl.NumberFormat(LANGUAGE);
+const plurals = new Intl.PluralRules(LANGUAGE);
 
 const STATUS_TEXT = {
-  active: ["Protecting this tab", "Reddit app prompts are blocked on this page."],
-  inactive: ["Not active on this tab", "Open Reddit here, or reload a Reddit tab that was already open."],
+  active: ["statusActive", "statusActiveDetail"],
+  inactive: ["statusInactive", "statusInactiveDetail"],
 };
 
 const element = id => document.getElementById(id);
+const message = name => browser.i18n.getMessage(name);
+
+function localize() {
+  document.documentElement.lang = LANGUAGE;
+  for (const node of document.querySelectorAll("[data-i18n]")) node.textContent = message(node.dataset.i18n);
+  for (const node of document.querySelectorAll("[data-i18n-label]")) {
+    node.setAttribute("aria-label", message(node.dataset.i18nLabel));
+  }
+}
 
 function renderStatus(state) {
   const [title, detail] = STATUS_TEXT[state];
   element("status").dataset.state = state;
-  element("status-title").textContent = title;
-  element("status-detail").textContent = detail;
+  element("status-title").textContent = message(title);
+  element("status-detail").textContent = message(detail);
 }
 
 function renderTotal(value) {
   const total = Number.isSafeInteger(value) && value >= 0 ? value : 0;
-  element("total").textContent = total.toLocaleString();
-  element("total-label").textContent =
-    `${total === 1 ? "app prompt" : "app prompts"} blocked since installation`;
+  element("total").textContent = numbers.format(total);
+  element("total-label").textContent = message(plurals.select(total) === "one" ? "totalOne" : "totalOther");
 }
 
 async function loadTotal() {
@@ -45,6 +56,7 @@ async function isProtectedTab() {
   }
 }
 
+localize();
 element("version").textContent = browser.runtime.getManifest().version;
 
 browser.storage.onChanged.addListener((changes, area) => {

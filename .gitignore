@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 web-ext-artifacts/
 extension/*.zip
+live-results/

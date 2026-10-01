@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EXTENSION_FILES = (
     "manifest.json", "background.js", "content/unblock.js", "content/unblock.css", "content/status.js",
     "popup/index.html", "popup/popup.css", "popup/popup.js",
-    "_locales/en/messages.json", "icons/icon.svg",
+    "_locales/en/messages.json", "_locales/it/messages.json", "icons/icon.svg",
     *(f"icons/icon-{size}.png" for size in (32, 48, 64, 96, 128)),
 )
 
