@@ -7,17 +7,17 @@ const popupScript = readFileSync(new URL("../extension/popup/popup.js", import.m
 const statusScript = readFileSync(new URL("../extension/content/status.js", import.meta.url), "utf8");
 const backgroundScript = readFileSync(new URL("../extension/background.js", import.meta.url), "utf8");
 
-async function renderPopup(total, response, reject = false) {
-  const elements = new Map(["#version", "#status-title", "#status-detail", "#status-dot", "#total-count"].map(id => [id, {
-    textContent: "",
-    active: false,
-    classList: { toggle(name, active) { assert.equal(name, "active"); elements.get(id).active = active; } },
-  }]));
+async function renderPopup(total, response, { reject = false, storageError = false } = {}) {
+  const elements = new Map(["version", "status", "status-title", "status-detail", "total", "total-label"]
+    .map(id => [id, { textContent: "", dataset: {} }]));
   let changed;
   const browser = {
     runtime: { getManifest: () => ({ version: "1.2.0" }) },
     storage: {
-      local: { get: async () => ({ blockedTotal: total }) },
+      local: { get: async () => {
+        if (storageError) throw new Error("Storage unavailable");
+        return { blockedTotal: total };
+      } },
       onChanged: { addListener(callback) { changed = callback; } },
     },
     tabs: {
@@ -32,29 +32,54 @@ async function renderPopup(total, response, reject = false) {
   };
   vm.runInNewContext(popupScript, {
     browser,
-    document: { querySelector: selector => elements.get(selector) },
+    document: { getElementById: id => elements.get(id) },
   });
   await new Promise(setImmediate);
-  return { elements, changed };
+  const text = id => elements.get(id).textContent;
+  return { elements, text, changed };
 }
 
 test("popup shows the lifetime total independently of the current page", async () => {
-  const { elements } = await renderPopup(42, { active: true });
-  assert.equal(elements.get("#version").textContent, "1.2.0");
-  assert.equal(elements.get("#status-title").textContent, "Active on this page");
-  assert.equal(elements.get("#status-detail").textContent, "Protection is running on this page.");
-  assert.equal(elements.get("#total-count").textContent, "42");
-  assert.equal(elements.get("#status-dot").active, true);
+  const { elements, text } = await renderPopup(42, { active: true });
+  assert.equal(text("version"), "1.2.0");
+  assert.equal(elements.get("status").dataset.state, "active");
+  assert.equal(text("status-title"), "Protecting this tab");
+  assert.equal(text("status-detail"), "Reddit app prompts are blocked on this page.");
+  assert.equal(text("total"), "42");
+  assert.equal(text("total-label"), "app prompts blocked since installation");
 });
 
 test("popup keeps the lifetime total visible on other sites and updates it live", async () => {
-  const { elements, changed } = await renderPopup(42, null, true);
-  assert.equal(elements.get("#status-title").textContent, "Inactive on this page");
-  assert.match(elements.get("#status-detail").textContent, /supported Reddit page/);
-  assert.equal(elements.get("#status-dot").active, false);
-  assert.equal(elements.get("#total-count").textContent, "42");
+  const { elements, text, changed } = await renderPopup(42, null, { reject: true });
+  assert.equal(elements.get("status").dataset.state, "inactive");
+  assert.equal(text("status-title"), "Not active on this tab");
+  assert.match(text("status-detail"), /reload a Reddit tab/);
+  assert.equal(text("total"), "42");
   changed({ blockedTotal: { newValue: 43 } }, "local");
-  assert.equal(elements.get("#total-count").textContent, "43");
+  assert.equal(text("total"), "43");
+  changed({ blockedTotal: { newValue: 99 } }, "sync");
+  assert.equal(text("total"), "43");
+});
+
+test("popup treats an inactive status reply as inactive", async () => {
+  const { elements } = await renderPopup(0, { active: false });
+  assert.equal(elements.get("status").dataset.state, "inactive");
+});
+
+test("popup normalizes missing totals and uses the singular label for one block", async () => {
+  const { text, changed } = await renderPopup(undefined, { active: true });
+  assert.equal(text("total"), "0");
+  assert.equal(text("total-label"), "app prompts blocked since installation");
+  changed({ blockedTotal: { newValue: 1 } }, "local");
+  assert.equal(text("total"), "1");
+  assert.equal(text("total-label"), "app prompt blocked since installation");
+  changed({ blockedTotal: { oldValue: 1 } }, "local");
+  assert.equal(text("total"), "0");
+});
+
+test("popup shows a placeholder when the total cannot be read", async () => {
+  const { text } = await renderPopup(5, { active: true }, { storageError: true });
+  assert.equal(text("total"), "—");
 });
 
 test("isolated script forwards only new blocks, including batched changes", async () => {

@@ -67,9 +67,9 @@ class PackagingTests(unittest.TestCase):
             self.assertEqual(manifest["name"], "Reddit Mobile Unblocker")
             self.assertEqual(manifest["version"], "1.2.0")
             self.assertEqual(manifest["action"]["default_popup"], "popup/index.html")
-            self.assertIn("https://github.com/silentfoxdev/RedditMobileUnblocker\"", popup)
-            self.assertIn("https://github.com/silentfoxdev/RedditMobileUnblocker/issues\"", popup)
-            self.assertIn("https://ko-fi.com/silentfoxdev/donate\"", popup)
+            self.assertIn("https://github.com/fabiomolignoni/RedditMobileUnblocker\"", popup)
+            self.assertIn("https://github.com/fabiomolignoni/RedditMobileUnblocker/issues\"", popup)
+            self.assertNotIn("ko-fi", popup.lower())
             self.assertEqual(manifest["browser_specific_settings"]["gecko"]["data_collection_permissions"], {"required": ["none"]})
             matches = [
                 "https://reddit.com/*", "https://www.reddit.com/*", "https://m.reddit.com/*", "https://sh.reddit.com/*",

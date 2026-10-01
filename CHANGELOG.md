@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 — redesigned popup
+
+- Rewrite the toolbar popup from scratch: a single panel with the current-tab
+  status and the cumulative total, and project links side by side.
+- Mark active protection with the mint check badge from the extension icon,
+  and fit the popup to Firefox for Android's full-screen view with larger
+  touch targets.
+- Remove the Ko-fi support link.
+- Point the source code and issue links to
+  https://github.com/fabiomolignoni/RedditMobileUnblocker.
+
 ## 1.1.0 — cumulative counter and dark popup
 
 - Give the toolbar popup a black background.

@@ -4,9 +4,8 @@ A Firefox extension for Android and desktop that suppresses the mandatory
 “Get the app to keep using Reddit” prompt and restores browsing.
 Requires **Firefox 144 or later**. Current source version: **1.2.0**.
 
-[Source code](https://github.com/silentfoxdev/RedditMobileUnblocker) ·
-[Report an issue](https://github.com/silentfoxdev/RedditMobileUnblocker/issues) ·
-[Support the project ☕](https://ko-fi.com/silentfoxdev/donate)
+[Source code](https://github.com/fabiomolignoni/RedditMobileUnblocker) ·
+[Report an issue](https://github.com/fabiomolignoni/RedditMobileUnblocker/issues)
 
 Licensed under [MPL 2.0](LICENSE).
 

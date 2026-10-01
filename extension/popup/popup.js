@@ -1,41 +1,55 @@
 "use strict";
 
-document.querySelector("#version").textContent = browser.runtime.getManifest().version;
+const TOTAL_KEY = "blockedTotal";
 
-function showStatus(title, detail, active) {
-  document.querySelector("#status-title").textContent = title;
-  document.querySelector("#status-detail").textContent = detail;
-  document.querySelector("#status-dot").classList.toggle("active", active);
+const STATUS_TEXT = {
+  active: ["Protecting this tab", "Reddit app prompts are blocked on this page."],
+  inactive: ["Not active on this tab", "Open Reddit here, or reload a Reddit tab that was already open."],
+};
+
+const element = id => document.getElementById(id);
+
+function renderStatus(state) {
+  const [title, detail] = STATUS_TEXT[state];
+  element("status").dataset.state = state;
+  element("status-title").textContent = title;
+  element("status-detail").textContent = detail;
 }
 
-function showTotal(value) {
-  const count = Number.isSafeInteger(value) && value >= 0 ? value : 0;
-  document.querySelector("#total-count").textContent = count.toLocaleString();
+function renderTotal(value) {
+  const total = Number.isSafeInteger(value) && value >= 0 ? value : 0;
+  element("total").textContent = total.toLocaleString();
+  element("total-label").textContent =
+    `${total === 1 ? "app prompt" : "app prompts"} blocked since installation`;
 }
 
-async function updateTotal() {
-  const stored = await browser.storage.local.get("blockedTotal");
-  showTotal(stored.blockedTotal);
-}
-
-async function updateStatus() {
+async function loadTotal() {
   try {
-    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    if (tab?.id === undefined) throw new Error("No active tab");
-    const status = await browser.tabs.sendMessage(tab.id, { type: "rmu:get-status" });
-    if (!status?.active) throw new Error("Protection is not running on this page");
-
-    showStatus("Active on this page", "Protection is running on this page.", true);
+    const stored = await browser.storage.local.get(TOTAL_KEY);
+    renderTotal(stored[TOTAL_KEY]);
   } catch {
-    showStatus("Inactive on this page", "Open a supported Reddit page and reload it.", false);
+    element("total").textContent = "—";
   }
 }
 
+// The isolated content script answers only on supported Reddit pages, so any
+// failure to reach it means protection is not running in this tab.
+async function isProtectedTab() {
+  try {
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+    if (tab?.id === undefined) return false;
+    const status = await browser.tabs.sendMessage(tab.id, { type: "rmu:get-status" });
+    return status?.active === true;
+  } catch {
+    return false;
+  }
+}
+
+element("version").textContent = browser.runtime.getManifest().version;
+
 browser.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.blockedTotal) showTotal(changes.blockedTotal.newValue);
+  if (area === "local" && changes[TOTAL_KEY]) renderTotal(changes[TOTAL_KEY].newValue);
 });
 
-updateTotal().catch(() => {
-  document.querySelector("#total-count").textContent = "—";
-});
-updateStatus();
+loadTotal();
+isProtectedTab().then(active => renderStatus(active ? "active" : "inactive"));

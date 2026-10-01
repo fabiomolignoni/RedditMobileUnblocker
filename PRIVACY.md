@@ -4,8 +4,8 @@ Applies to version 1.2.0. Updated 1 October 2026.
 
 Reddit Mobile Unblocker does not collect or transmit personal data. It has no
 analytics, telemetry, advertising, remote code, or external services. It makes
-no automatic network requests of its own. The popup contains links to GitHub
-and Ko-fi; opening them is an explicit user action governed by those sites.
+no automatic network requests of its own. The popup contains links to the
+project's GitHub repository; opening them is an explicit user action governed by GitHub.
 
 The extension operates locally on the top-level HTTPS pages of reddit.com,
 www.reddit.com, m.reddit.com and sh.reddit.com. It inspects page elements to
@@ -27,5 +27,5 @@ page requests and Reddit's own data practices are outside the extension's contro
 
 To stop the extension's page modifications, disable or remove it in Firefox's
 extension manager and reload open Reddit tabs. No data is sent to the extension's
-developer. Any information you choose to send through a support channel is
-separate from the extension's operation.
+developer. Any information you choose to share in GitHub Issues is separate
+from the extension's operation.

@@ -1,33 +1,142 @@
 :root {
   color-scheme: dark;
-  font: 14px/1.4 system-ui, sans-serif;
-  background: #000;
-  color: #f1f7f4;
+  --bg: #000;
+  --surface: #111;
+  --surface-raised: #1c1c1c;
+  --border: #2a2a2a;
+  --border-strong: #3d3d3d;
+  --text: #f5f5f5;
+  --muted: #a3a3a3;
+  --brand: #ff4500;
+  /* Same mint and ink as the check badge in the extension icon. */
+  --ok: #56e0b1;
+  --ok-ink: #123a42;
+  --radius: 14px;
+  font: 14px/1.45 system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 
-* { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 
-body { width: 320px; margin: 0; padding: 20px; }
+body {
+  display: grid;
+  gap: 16px;
+  width: 360px;
+  margin: 0;
+  padding: 18px;
+}
 
-.header { display: flex; align-items: center; gap: 12px; }
-.logo { flex: none; border-radius: 12px; }
-.eyebrow { margin: 0 0 2px; color: #a9c2b7; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
-h1 { margin: 0; font-size: 17px; line-height: 1.2; }
+h1, h2, p { margin: 0; }
 
-.status-card, .counter-card { padding: 16px; border: 1px solid #3d554a; border-radius: 14px; background: #141a17; }
-.status-card { margin: 20px 0 12px; }
-.status-heading { display: flex; align-items: center; gap: 9px; }
-.status-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #8a9e94; }
-.status-dot.active { background: #63d6a3; box-shadow: 0 0 0 3px #275340; }
-.status-card p { margin: 8px 0 0 18px; color: #a9c2b7; }
-.counter-card { display: grid; gap: 2px; margin-bottom: 16px; }
-.counter-card strong { color: #63d6a3; font-size: 30px; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.counter-card span { color: #a9c2b7; }
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
-nav { display: grid; gap: 4px; }
-nav a { display: flex; justify-content: space-between; align-items: center; min-height: 38px; padding: 6px 10px; border-radius: 8px; color: #a5edc9; font-weight: 600; text-decoration: none; }
-nav a:hover, nav a:focus-visible { background: #294a3b; outline: none; }
-nav a:focus-visible { box-shadow: 0 0 0 2px #63d6a3; }
-nav a span:last-child { color: #a9c2b7; }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
-footer { margin-top: 14px; border-top: 1px solid #3d554a; padding-top: 12px; color: #a9c2b7; font-size: 12px; }
+/* Header */
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { flex: none; }
+h1 { font-size: 15px; font-weight: 650; line-height: 1.25; }
+.version { margin-top: 2px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+/* Status and counter panel */
+
+.panel {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color .2s;
+}
+
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  transition: background-color .2s, border-color .2s;
+}
+
+.status-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--muted);
+  transition: background-color .2s, color .2s;
+}
+
+.status-icon .icon { display: none; }
+.status h2 { font-size: 14px; font-weight: 650; line-height: 1.3; }
+.status p { margin-top: 2px; color: var(--muted); font-size: 13px; }
+
+.status[data-state="checking"] .icon-checking { display: block; animation: spin .9s linear infinite; }
+.status[data-state="inactive"] .icon-inactive { display: block; }
+.status[data-state="active"] .icon-active { display: block; stroke-width: 2.75; }
+
+.panel:has(.status[data-state="active"]) { border-color: rgb(86 224 177 / .4); }
+.status[data-state="active"] { border-color: rgb(86 224 177 / .25); background: rgb(86 224 177 / .08); }
+.status[data-state="active"] .status-icon { background: var(--ok); color: var(--ok-ink); }
+
+.stat { display: grid; gap: 4px; padding: 16px 14px; }
+.stat-value { font-size: 36px; font-weight: 700; line-height: 1.05; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat-label { color: var(--muted); font-size: 13px; }
+
+/* Project links */
+
+.links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color .15s, border-color .15s;
+}
+
+.links a .icon { flex: none; width: 16px; height: 16px; color: var(--muted); }
+.links a .external { width: 14px; height: 14px; margin-inline-start: auto; transition: color .15s; }
+.links a:hover { border-color: var(--border-strong); background: var(--surface-raised); }
+.links a:hover .external { color: var(--brand); }
+.links a:focus-visible { outline: 2px solid var(--ok); outline-offset: 2px; }
+
+/* Firefox for Android shows the popup full screen: fill it and enlarge touch targets. */
+@media (pointer: coarse) {
+  body { width: auto; max-width: 480px; margin: 0 auto; padding: 20px; }
+  .links a { min-height: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+@keyframes spin { to { transform: rotate(1turn); } }

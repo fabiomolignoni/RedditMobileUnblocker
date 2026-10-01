@@ -8,40 +8,46 @@
   <script src="popup.js" defer></script>
 </head>
 <body>
-  <header class="header">
-    <img class="logo" src="../icons/icon-48.png" alt="" width="48" height="48">
+  <header class="brand">
+    <img src="../icons/icon.svg" alt="" width="40" height="40">
     <div>
-      <p class="eyebrow">Browser extension</p>
       <h1>Reddit Mobile Unblocker</h1>
+      <p class="version">Version <span id="version"></span></p>
     </div>
   </header>
 
-  <main>
-    <section class="status-card" role="status" aria-live="polite">
-      <div class="status-heading">
-        <span id="status-dot" class="status-dot" aria-hidden="true"></span>
-        <strong id="status-title">Checking this page…</strong>
+  <main class="panel">
+    <section id="status" class="status" data-state="checking" role="status" aria-live="polite" aria-atomic="true">
+      <span class="status-icon" aria-hidden="true">
+        <svg class="icon icon-checking" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-5.5-7.6"/></svg>
+        <svg class="icon icon-active" viewBox="0 0 24 24"><path d="m5.5 12.5 4 4 9-9"/></svg>
+        <svg class="icon icon-inactive" viewBox="0 0 24 24"><path d="M7 12h10"/></svg>
+      </span>
+      <div>
+        <h2 id="status-title">Checking this tab…</h2>
+        <p id="status-detail">Looking for Reddit on the current page.</p>
       </div>
-      <p id="status-detail">Reading the current tab.</p>
     </section>
-    <section class="counter-card" aria-label="Blocked app prompts" aria-live="polite">
-      <strong id="total-count">…</strong>
-      <span>Recognized app prompts blocked since installation</span>
+
+    <section class="stat" aria-live="polite" aria-atomic="true">
+      <strong id="total" class="stat-value">…</strong>
+      <span id="total-label" class="stat-label">app prompts blocked since installation</span>
     </section>
   </main>
 
-  <nav aria-label="Project links">
-    <a href="https://github.com/silentfoxdev/RedditMobileUnblocker" target="_blank" rel="noopener noreferrer">
-      <span>GitHub</span><span aria-hidden="true">↗</span>
+  <nav class="links" aria-label="Project links">
+    <a href="https://github.com/fabiomolignoni/RedditMobileUnblocker" target="_blank" rel="noopener noreferrer">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5"/></svg>
+      <span>Source code</span>
+      <svg class="icon external" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8m-6.5 0H16v6.5"/></svg>
+      <span class="visually-hidden">(opens in a new tab)</span>
     </a>
-    <a href="https://github.com/silentfoxdev/RedditMobileUnblocker/issues" target="_blank" rel="noopener noreferrer">
-      <span>Issues</span><span aria-hidden="true">↗</span>
-    </a>
-    <a href="https://ko-fi.com/silentfoxdev/donate" target="_blank" rel="noopener noreferrer">
-      <span>Support ☕</span><span aria-hidden="true">↗</span>
+    <a href="https://github.com/fabiomolignoni/RedditMobileUnblocker/issues" target="_blank" rel="noopener noreferrer">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 5v5m0 3.5v.01"/></svg>
+      <span>Report issue</span>
+      <svg class="icon external" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8m-6.5 0H16v6.5"/></svg>
+      <span class="visually-hidden">(opens in a new tab)</span>
     </a>
   </nav>
-
-  <footer>Version <span id="version"></span></footer>
 </body>
 </html>
