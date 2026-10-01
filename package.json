@@ -1,6 +1,6 @@
 {
   "name": "reddit-mobile-unblocker",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Firefox extension that dismisses Reddit app prompts and restores mobile browsing",
   "license": "MPL-2.0",

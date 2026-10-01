@@ -65,7 +65,7 @@ class PackagingTests(unittest.TestCase):
             self.assertEqual(manifest["permissions"], ["storage"])
             self.assertEqual(manifest["background"], {"scripts": ["background.js"]})
             self.assertEqual(manifest["name"], "Reddit Mobile Unblocker")
-            self.assertEqual(manifest["version"], "1.1.0")
+            self.assertEqual(manifest["version"], "1.2.0")
             self.assertEqual(manifest["action"]["default_popup"], "popup/index.html")
             self.assertIn("https://github.com/silentfoxdev/RedditMobileUnblocker\"", popup)
             self.assertIn("https://github.com/silentfoxdev/RedditMobileUnblocker/issues\"", popup)

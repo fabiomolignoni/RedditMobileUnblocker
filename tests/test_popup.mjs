@@ -15,7 +15,7 @@ async function renderPopup(total, response, reject = false) {
   }]));
   let changed;
   const browser = {
-    runtime: { getManifest: () => ({ version: "1.1.0" }) },
+    runtime: { getManifest: () => ({ version: "1.2.0" }) },
     storage: {
       local: { get: async () => ({ blockedTotal: total }) },
       onChanged: { addListener(callback) { changed = callback; } },
@@ -40,7 +40,7 @@ async function renderPopup(total, response, reject = false) {
 
 test("popup shows the lifetime total independently of the current page", async () => {
   const { elements } = await renderPopup(42, { active: true });
-  assert.equal(elements.get("#version").textContent, "1.1.0");
+  assert.equal(elements.get("#version").textContent, "1.2.0");
   assert.equal(elements.get("#status-title").textContent, "Active on this page");
   assert.equal(elements.get("#status-detail").textContent, "Protection is running on this page.");
   assert.equal(elements.get("#total-count").textContent, "42");
