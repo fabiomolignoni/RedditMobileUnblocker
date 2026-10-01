@@ -2,7 +2,7 @@
 
 A Firefox extension for Android and desktop that removes Reddit's mandatory
 “Get the app to keep using Reddit” prompts and restores scrolling and taps.
-Requires **Firefox 144 or later**. Current source version: **1.2.0**.
+Requires **Firefox 144 or later**. Current source version: **1.3.0**.
 
 [Source code](https://github.com/fabiomolignoni/RedditMobileUnblocker) ·
 [Report an issue](https://github.com/fabiomolignoni/RedditMobileUnblocker/issues) ·
@@ -76,7 +76,7 @@ there after uninstalling.
 npm ci
 npm run lint
 npm test
-npm run build   # dist/reddit-mobile-unblocker-1.2.0-unsigned.xpi (reproducible)
+npm run build   # dist/reddit-mobile-unblocker-1.3.0-unsigned.xpi (reproducible)
 ```
 
 Tests need **Firefox 144+ and geckodriver** in `PATH`, through `FIREFOX_BINARY` and

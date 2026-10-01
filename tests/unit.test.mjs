@@ -30,7 +30,7 @@ async function renderPopup(total, response, { reject = false, storageError = fal
       getUILanguage: () => language,
       getMessage: name => locales[language][name]?.message ?? "",
     },
-    runtime: { getManifest: () => ({ version: "1.2.0" }) },
+    runtime: { getManifest: () => ({ version: "1.3.0" }) },
     storage: {
       local: { get: async () => {
         if (storageError) throw new Error("Storage unavailable");
@@ -63,7 +63,7 @@ async function renderPopup(total, response, { reject = false, storageError = fal
 
 test("popup shows the lifetime total independently of the current page", async () => {
   const { elements, text } = await renderPopup(42, { active: true });
-  assert.equal(text("version"), "1.2.0");
+  assert.equal(text("version"), "1.3.0");
   assert.equal(elements.get("status").dataset.state, "active");
   assert.equal(text("status-title"), "Protecting this tab");
   assert.equal(text("status-detail"), "Reddit app prompts are blocked on this page.");

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.3.0 — faster, sturdier unblocking and live tests
 
 - Rewrite the page script to inspect only inserted or changed elements and to
   unlock at most once per animation frame. On live Reddit this removes up to 2 s

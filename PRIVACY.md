@@ -1,6 +1,6 @@
 # Privacy policy — Reddit Mobile Unblocker
 
-Applies to version 1.2.0. Updated 1 October 2026.
+Applies to version 1.3.0. Updated 1 October 2026.
 
 Reddit Mobile Unblocker does not collect or transmit personal data. It has no
 analytics, telemetry, advertising, remote code, or external services. It makes
