@@ -1,5 +1,16 @@
 # Changelog
 
+Releases are signed by Mozilla and published for Firefox for Android on
+[Firefox Add-ons](https://addons.mozilla.org/firefox/addon/reddit-mobile-unblocker/).
+
+## Unreleased
+
+- Support Firefox for Android only, as published on Firefox Add-ons; desktop
+  Firefox remains a development and test environment. The extension is unchanged.
+- Live test: deliver a timed prompt the way Reddit's server does, load pages again
+  after the cookie-consent choice (Reddit ships its prompt components only
+  afterwards), and retry a refused first visit once.
+
 ## 1.3.0 — faster, sturdier unblocking and live tests
 
 - Rewrite the page script to inspect only inserted or changed elements and to
@@ -54,6 +65,3 @@
   descriptions and an original icon.
 - Declare no data collection; restrict execution to four Reddit HTTPS origins.
 - Include reproducible packaging, release checksums and real Firefox fixture tests.
-
-Live Android acceptance testing and Mozilla signing are tracked separately in
-`docs/RELEASE_CHECKLIST.md`; this file does not assert that publication occurred.

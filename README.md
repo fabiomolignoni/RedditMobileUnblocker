@@ -1,124 +1,116 @@
 # Reddit Mobile Unblocker
 
-A Firefox extension for Android and desktop that removes Reddit's mandatory
-“Get the app to keep using Reddit” prompts and restores scrolling and taps.
-Requires **Firefox 144 or later**. Current source version: **1.3.0**.
+[![Firefox Add-ons](https://img.shields.io/amo/v/reddit-mobile-unblocker?label=Firefox%20Add-ons)](https://addons.mozilla.org/firefox/addon/reddit-mobile-unblocker/)
+[![Users](https://img.shields.io/amo/users/reddit-mobile-unblocker)](https://addons.mozilla.org/firefox/addon/reddit-mobile-unblocker/)
+[![CI](https://github.com/fabiomolignoni/RedditMobileUnblocker/actions/workflows/ci.yml/badge.svg)](https://github.com/fabiomolignoni/RedditMobileUnblocker/actions/workflows/ci.yml)
 
-[Source code](https://github.com/fabiomolignoni/RedditMobileUnblocker) ·
-[Report an issue](https://github.com/fabiomolignoni/RedditMobileUnblocker/issues) ·
-Licensed under [MPL 2.0](LICENSE)
+A Firefox for Android extension that removes Reddit's “Get the app to keep using
+Reddit” prompts and gives back scrolling and taps.
 
-The extension does not read or clear cookies, change the user agent, redirect,
-or collect and transmit data; logins and preferences are untouched
-([privacy policy](PRIVACY.md)). This is not an official Reddit product.
+[Install](https://addons.mozilla.org/firefox/addon/reddit-mobile-unblocker/) ·
+[Changelog](CHANGELOG.md) ·
+[Privacy policy](PRIVACY.md) ·
+[Report an issue](https://github.com/fabiomolignoni/RedditMobileUnblocker/issues)
 
-## Try it
+## Features
 
-The package is **unsigned**, so Firefox stable loads it only temporarily, until
-the browser restarts. Permanent installation requires
-[signing by Mozilla](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/),
-which has not been done.
+- Hides Reddit's blocking app prompts (bottom sheets, full-screen sheets and
+  dialogs) before they are drawn.
+- Restores the scrolling, taps and swipes that a prompt locks.
+- Leaves Reddit's ordinary dialogs, such as cookie consent and login, working.
+- Works in every language: prompts are recognized by their components, not their text.
+- Shows whether the current tab is protected and how many prompts have been blocked.
 
-**Android.** On the computer, install Node.js 24+, Python 3 and the
-[Android platform tools](https://developer.android.com/tools/releases/platform-tools)
-(`adb`). On the phone, enable USB debugging and, in Firefox settings, “Remote
-debugging via USB”. Connect the phone, then run:
+## Install
 
-```sh
-npm ci
-adb devices
-npm run start:android -- --android-device=DEVICE_ID --firefox-apk=org.mozilla.firefox
-```
+Install it in Firefox for Android 144 or later from
+[Firefox Add-ons](https://addons.mozilla.org/firefox/addon/reddit-mobile-unblocker/).
+If Firefox asks, allow access to Reddit's sites, then reload open Reddit tabs.
 
-Grant access to the Reddit domains if prompted and reload open Reddit tabs. Use
-`org.mozilla.firefox_beta` for Beta and `org.mozilla.fenix` for Nightly
-([Mozilla's guide](https://extensionworkshop.com/documentation/develop/developing-extensions-for-firefox-for-android/)).
+## Privacy
 
-**Desktop.** Open `about:debugging#/runtime/this-firefox`, choose **Load Temporary
-Add-on** and select `extension/manifest.json`, or run `npm ci && npm start`.
+The extension collects and transmits no data and makes no network requests of its
+own. It runs only on HTTPS pages of `reddit.com`, `www.reddit.com`, `m.reddit.com`
+and `sh.reddit.com`; besides access to those sites, its only permission is
+`storage`, which keeps the blocked-prompt count on the device. It does not read or
+clear cookies, touch logins, or change the user agent. Details are in the
+[privacy policy](PRIVACY.md).
 
 ## How it works
 
-- **Detection** is language-independent: promotions are recognized by component
-  identity (ids, element names and classes), never by displayed text. Reddit
-  renders its sheets and dialogs as separate “portal” elements carrying the
-  promotion's id and classes; user-origin CSS hides them before the first frame
-  in every tree, including closed shadow roots.
-- **Reddit's own dismissal**: when Reddit's `configured-xpromo-modal` opens a
-  prompt, the extension sends it Reddit's dismissal event, which removes the
-  prompt and its scroll lock even if the prompt's identity is new.
-- **Unlocking**: known lock classes, blocking inline styles (restoring earlier
-  values and the scroll position) and `inert` are removed from the page roots
-  only. A visible ordinary dialog or menu, such as cookie consent or login,
-  suspends unlocking until it closes.
-- **Gestures**: after a prompt, `preventDefault()` on `touchmove`/`wheel` is
-  ignored for listeners on `window`, `document`, `html` or `body` only, except
-  for form controls, sliders, canvas, multitouch, modifier keys and while an
-  ordinary dialog is open. Listeners on the page's own elements keep working.
-- **Prevention**: Reddit's `localStorage["xpromo-consolidation"]` key is set to
-  the current date, in the format used by uBlock Origin's public filter.
-- **Performance**: only inserted or changed elements are inspected, and unlocking
-  runs at most once per animation frame. Measured on live Reddit (desktop Firefox
-  emulating a phone), scrolling showed no measurable main-thread overhead.
-- **Popup** (English and Italian): current-tab status and a cumulative count of
-  blocked prompts, stored locally in the extension's storage.
+A page script runs at `document_start` in the page's `MAIN` world, because it has
+to wrap the page's own `preventDefault` and `attachShadow` before Reddit's scripts
+run; it has no access to extension APIs. It:
 
-The page script runs in the `MAIN` world because it must wrap page-owned
-`preventDefault` and `attachShadow`; it has no access to extension APIs. It runs
-on `reddit.com`, `www.reddit.com`, `m.reddit.com` and `sh.reddit.com` (HTTPS,
-top-level documents only). To disable it, use Firefox's extension manager and
-reload Reddit tabs. The date stored in Reddit's `xpromo-consolidation` key stays
-there after uninstalling.
+1. **Hides** known promotion components by id, element name and class with
+   user-origin CSS, which also reaches closed shadow roots.
+2. **Dismisses** prompts through Reddit's own `configured-xpromo-modal`, sending it
+   the event Reddit uses to close them, so prompts with an unknown identity close too.
+3. **Unlocks** the page roots (lock classes, blocking inline styles and `inert`),
+   unless an ordinary dialog is open.
+4. **Releases gestures** by ignoring `preventDefault()` from page-level
+   `touchmove`/`wheel` listeners after a prompt, except on form controls, sliders
+   and canvas, for multitouch, and while an ordinary dialog is open.
+5. **Sets** Reddit's `localStorage["xpromo-consolidation"]` to the current date, as
+   uBlock Origin's filter does. The value stays after uninstalling.
 
-## Development
-
-```sh
-npm ci
-npm run lint
-npm test
-npm run build   # dist/reddit-mobile-unblocker-1.3.0-unsigned.xpi (reproducible)
-```
-
-Tests need **Firefox 144+ and geckodriver** in `PATH`, through `FIREFOX_BINARY` and
-`GECKODRIVER`, or in the Selenium cache. Unit tests cover the popup, counter and
-selector consistency. Browser tests install the extension in headless Firefox and
-check, on local fixtures modeled on Reddit's components, execution before page
-scripts, portals, Reddit's dismissal, shadow DOM, native dialogs and popovers,
-ordinary dialogs, gestures, layout restoration, SPA navigation, disabled storage,
-12 languages (including right-to-left) plus an unknown locale, and excluded origins.
-
-## Live test on reddit.com
-
-`npm run test:live` checks the extension on real Reddit pages in a real Firefox
-and writes screenshots and `report.json` to `live-results/`.
-
-- **Simulated prompt**: Reddit's own components open an app prompt on the live
-  page, with page-level gesture blockers like Reddit's. A control run without the
-  extension first confirms that the prompt blocks the page; with the extension,
-  four variants (including an unknown identity) must leave the page usable.
-- **Natural prompt**: each page stays open for `--wait` seconds (default 40) for
-  Reddit's own timer-based prompt. Reddit shows it only to some sessions, so “not
-  served” is information, not a failure.
-
-A page is usable when nothing covers it, its roots are not locked, and real scroll
-gestures move it, including one that starts on an image or video. Options:
-`--url URL` (repeatable), `--wait SECONDS`, `--headed`, and `--android [SERIAL]`
-to run on a USB-connected phone (needs adb, geckodriver 0.36+ and remote debugging).
-Exit status is 0 when usable, 1 on failure, and 2 when the run could not be
-performed, for example because Reddit showed a verification page.
+Only inserted or changed elements are inspected, and unlocking runs at most once
+per animation frame.
 
 ## Limitations
 
-Protection relies on Reddit's component identities and lock mechanisms and may need
-updates when they change; run the live test to check. It does not bypass login
-walls, age or NSFW gates, or server-side blocks. Reddit tests prompt variants on
-subsets of users, so not every variant can be observed.
+- It relies on Reddit's component names and may need an update when Reddit changes
+  them. Reddit tests prompt variants on subsets of users, so not every variant can
+  be observed.
 
-## References
+## Reporting issues
 
-- [uAssets issue #32706](https://github.com/uBlockOrigin/uAssets/issues/32706) and
-  [public Reddit filters](https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances-others.txt).
-- [`$currentDate$` format in uBlock Origin](https://github.com/gorhill/uBlock/blob/master/src/js/resources/localstorage.js).
-- [Content scripts and execution worlds](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts).
+[Open an issue](https://github.com/fabiomolignoni/RedditMobileUnblocker/issues) with
+the Reddit URL, your Firefox and extension versions, whether the popup shows the
+tab as protected, and a screenshot of the prompt.
 
-Independent implementation, without bundled libraries or filter lists.
+## Development
+
+Requires Node.js 24+, Python 3, and Firefox 144+ with geckodriver, found in `PATH`,
+through `FIREFOX_BINARY` and `GECKODRIVER`, or in the Selenium cache.
+
+```sh
+npm ci
+npm run check     # web-ext lint, unit tests, browser tests on local fixtures
+npm run build     # reproducible dist/reddit-mobile-unblocker-<version>-unsigned.xpi
+npm run release   # checks, then the package, source archive and checksums for AMO
+npm start         # load the extension temporarily in desktop Firefox
+```
+
+To run the source on a phone, enable USB debugging and Firefox's “Remote debugging
+via USB”, connect it, find its ID with `adb devices`, and run:
+
+```sh
+npm run start:android -- --android-device=DEVICE_ID --firefox-apk=org.mozilla.firefox
+```
+
+Use `org.mozilla.firefox_beta` for Beta and `org.mozilla.fenix` for Nightly
+([Mozilla's guide](https://extensionworkshop.com/documentation/develop/developing-extensions-for-firefox-for-android/)).
+
+### Live test
+
+`npm run test:live` checks the extension on real Reddit pages, in Firefox emulating
+a phone or, with `--android`, on a connected phone. Reddit's own components open a
+prompt, both immediately and through Reddit's 30-second timer: without the
+extension the prompt must block the page, with it the page must stay usable.
+Screenshots and `report.json` go to `live-results/`. Exit status 2 means the run
+could not be performed or was inconclusive, for example because the prompt no
+longer blocks Reddit and the simulation needs updating. Run
+`npm run test:live -- --help` for details and options.
+
+## AI assistance
+
+The code was written with the help of AI tools. It is checked by the automated
+and live tests described above.
+
+## License
+
+[MPL 2.0](LICENSE). Not affiliated with or endorsed by Reddit. Thanks to the
+uBlock Origin community, whose
+[work on Reddit's prompts](https://github.com/uBlockOrigin/uAssets/issues/32706)
+informed this independent implementation, which bundles no filter lists.
